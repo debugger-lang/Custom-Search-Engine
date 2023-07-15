@@ -1,14 +1,14 @@
 import sqlite3
 import pandas as pd
 
-
+# this class will handle all of the database interactions
 class DBStorage():
     def __init__(self):
         self.con = sqlite3.connect("links.db")
         self.con2 = sqlite3.connect("recommendations.db")
         self.setup_tables()
-
-    def setup_tables(self):
+#create database and store data
+    def setup_tables(self): 
         cur1 = self.con.cursor()
         cur2 = self.con2.cursor()
         results_table = r"""
@@ -39,12 +39,12 @@ class DBStorage():
         cur2.execute(recommendation_table)
         self.con2.commit()
         cur2.close()
-
+# read results from db
     def query_results(self, query):
         df = pd.read_sql(
             f"select * from results where query='{query}' order by rank asc", self.con)
         return df
-
+# inserts new data/row into db
     def insert_row(self, values):
         cur = self.con.cursor()
         try:
